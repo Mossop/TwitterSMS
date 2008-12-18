@@ -17,6 +17,13 @@ class Settings:
   sms_password = None
   sms_number = None
 
+  def __init__(self, args):
+    self.twitter_username = args[0]
+    self.twitter_password = args[1]
+    self.sms_username = args[2]
+    self.sms_password = args[3]
+    self.sms_number = args[4]
+
 class ClickSMS:
   def __init__(self, settings):
     self.settings = settings
@@ -121,12 +128,7 @@ if __name__ == '__main__':
     pickle.dump(settings, f)
     f.close()
   elif len(sys.argv) == 7:
-    settings = Settings()
-    settings.twitter_username = sys.argv[2]
-    settings.twitter_password = sys.argv[3]
-    settings.sms_username = sys.argv[4]
-    settings.sms_password = sys.argv[5]
-    settings.sms_number = sys.argv[6]
+    settings = Settings(sys.argv[2:])
     twitter = Twitter(settings)
     twitter.GetReplies()
     twitter.GetDirectMessages()
