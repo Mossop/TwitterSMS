@@ -120,10 +120,10 @@ if __name__ == '__main__':
     sms = ClickSMS(settings)
     messages = twitter.GetReplies()
     for message in messages:
-      sms.sendMessage(message.sender, message.text)
+      sms.sendMessage('07624801423', "%s reply: %s" % (message.sender, message.text))
     messages = twitter.GetDirectMessages()
     for message in messages:
-      sms.sendMessage('07624801423', "%s: %s" % (message.sender, message.text))
+      sms.sendMessage('07624801423', "%s direct: %s" % (message.sender, message.text))
     f = open(sys.argv[1], 'w')
     pickle.dump(settings, f)
     f.close()
