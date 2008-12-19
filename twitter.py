@@ -44,7 +44,6 @@ class Twitter:
 
   def GetDirectMessages(self, lastID = None):
     messages = []
-    newest = None
     url = 'http://twitter.com/direct_messages.xml'
     if lastID is not None:
       url += '?since_id=' + lastID
@@ -52,14 +51,13 @@ class Twitter:
     for node in dom.documentElement.childNodes:
       if node.nodeType == node.ELEMENT_NODE and node.tagName == 'direct_message':
         message = Message(node)
-        if message.id > newest:
-          newest = message.id
+        if message.id > lastID:
+          lastID = message.id
         messages += [message]
-    return (messages, newest)
+    return (messages, lastID)
 
   def GetReplies(self, lastID = None):
     messages = []
-    newest = None
     url = 'http://twitter.com/statuses/replies.xml'
     if lastID is not None:
       url += '?since_id=' + lastID
@@ -67,7 +65,7 @@ class Twitter:
     for node in dom.documentElement.childNodes:
       if node.nodeType == node.ELEMENT_NODE and node.tagName == 'status':
         message = Message(node)
-        if message.id > newest:
-          newest = message.id
+        if message.id > lastID:
+          lastID = message.id
         messages += [message]
-    return (messages, newest)
+    return (messages, lastID)
