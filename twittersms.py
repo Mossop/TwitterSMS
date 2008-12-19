@@ -27,10 +27,10 @@ if __name__ == '__main__':
     sms = ClickSMS(settings.sms_username, settings.sms_password)
     (messages, settings.lastReplyID) = twitter.GetReplies(settings.lastReplyID)
     for message in messages:
-      sms.sendMessage(settings.sms_number, "%s reply: %s" % (message.sender, message.text), '07624801423')
+      sms.sendMessage(settings.sms_number, "%s(r): %s" % (message.sender, message.text), '07624801423')
     (messages, settings.lastDirectMessageID) = twitter.GetDirectMessages(settings.lastDirectMessageID)
     for message in messages:
-      sms.sendMessage(settings.sms_number, "%s direct: %s" % (message.sender, message.text), '07624801423')
+      sms.sendMessage(settings.sms_number, "%s(d): %s" % (message.sender, message.text), '07624801423')
     f = open(sys.argv[1], 'w')
     pickle.dump(settings, f)
     f.close()
