@@ -27,9 +27,13 @@ if __name__ == '__main__':
     sms = ClickSMS(settings.sms_username, settings.sms_password)
     try:
       (messages, settings.lastReplyID) = twitter.GetReplies(settings.lastReplyID)
+      if len(messages) > 7:
+        raise Exception("Refusing to send %s replies" % len(messages))
       for message in messages:
         sms.sendMessage(settings.sms_number, "%s(r): %s" % (message.sender, message.text), '07624801423')
       (messages, settings.lastDirectMessageID) = twitter.GetDirectMessages(settings.lastDirectMessageID)
+      if len(messages) > 7:
+        raise Exception("Refusing to send %s direct messages" % len(messages))
       for message in messages:
         sms.sendMessage(settings.sms_number, "%s(d): %s" % (message.sender, message.text), '07624801423')
     except Exception, inst:
