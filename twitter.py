@@ -63,7 +63,8 @@ class Twitter:
         message = Message(self, node)
         if message.id > lastID:
           lastID = message.id
-        messages += [message]
+        if message.sender != self.username:
+          messages += [message]
     return (messages, lastID)
 
   def GetDirectMessages(self, lastID = None):
@@ -91,5 +92,6 @@ class Twitter:
         message = Message(self, node)
         if message.id > lastID:
           lastID = message.id
-        messages += [message]
+        if message.sender != self.username:
+          messages += [message]
     return (messages, lastID)
