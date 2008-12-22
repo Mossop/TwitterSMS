@@ -34,7 +34,6 @@ def printUsage():
        twittersms.py skip [options]\n\
            Skips any new messages.\n\n\
        twittersms.py send [options]\n\
-       twittersms.py [options]\n\
            Sends any new messages.\n\n\
 Pass -h as an option for specific help on that syntax."
 
@@ -129,7 +128,9 @@ def initSettings(args):
   f.close()
 
 if __name__ == '__main__':
-  if len(sys.argv) < 2:
+  if len(sys.argv) == 2 and (sys.argv[1] == '-h' or sys.argv[1] == '--help'):
+    printUsage()
+  elif len(sys.argv) < 2:
     getUpdates(False, sys.argv[1:])
   elif sys.argv[1] == 'send':
     getUpdates(False, sys.argv[2:])
