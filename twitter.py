@@ -1,5 +1,6 @@
 import urllib2
 from xml.dom import minidom
+from datetime import datetime
 
 def textContent(node):
   str = ''
@@ -9,13 +10,22 @@ def textContent(node):
   return str
 
 class Message:
-  def __init__(self, element):
+  def __init__(self, twitter, element):
+    if element.tagName == 'direct_message':
+      self.type = 'direct'
+    else:
+      self.type = 'status'
     for node in element.childNodes:
       if node.nodeType == node.ELEMENT_NODE:
         if node.tagName == 'id':
           self.id = textContent(node)
         elif node.tagName == 'text':
           self.text = textContent(node)
+        elif node.tagName == 'created_at':
+          self.date = datetime.strptime(textContent(node), '%a %b %d %H:%M:%S +0000 %Y')
+        elif node.tagName == 'in_reply_to_screen_name':
+          if textContent(node) == twitter.username:
+            self.type = 'reply'
         elif node.tagName == 'user' or node.tagName == 'sender':
           for n in node.childNodes:
             if n.nodeType == n.ELEMENT_NODE and n.tagName == 'screen_name':
@@ -42,6 +52,20 @@ class Twitter:
   def find_user_password(self, realm, uri):
     return (self.username, self.password)
 
+  def GetTimeline(self, lastID = None):
+    messages = []
+    url = 'http://twitter.com/statuses/friends_timeline.xml'
+    if lastID is not None:
+      url += '?since_id=' + lastID
+    dom = self._getStream(url)
+    for node in dom.documentElement.childNodes:
+      if node.nodeType == node.ELEMENT_NODE and node.tagName == 'status':
+        message = Message(self, node)
+        if message.id > lastID:
+          lastID = message.id
+        messages += [message]
+    return (messages, lastID)
+
   def GetDirectMessages(self, lastID = None):
     messages = []
     url = 'http://twitter.com/direct_messages.xml'
@@ -50,7 +74,7 @@ class Twitter:
     dom = self._getStream(url)
     for node in dom.documentElement.childNodes:
       if node.nodeType == node.ELEMENT_NODE and node.tagName == 'direct_message':
-        message = Message(node)
+        message = Message(self, node)
         if message.id > lastID:
           lastID = message.id
         messages += [message]
@@ -64,7 +88,7 @@ class Twitter:
     dom = self._getStream(url)
     for node in dom.documentElement.childNodes:
       if node.nodeType == node.ELEMENT_NODE and node.tagName == 'status':
-        message = Message(node)
+        message = Message(self, node)
         if message.id > lastID:
           lastID = message.id
         messages += [message]
