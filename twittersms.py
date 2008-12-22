@@ -1,4 +1,4 @@
-import sys, pickle, time
+import sys, pickle
 from clicksms import ClickSMS
 from twitter import Twitter
 
@@ -48,9 +48,9 @@ if __name__ == '__main__':
       removeDuplicates(messages)
       for message in messages:
         if message.type == 'direct':
-          sms.sendMessage(settings.sms_number, "%s(d): %s" % (message.sender, message.text))
+          sms.sendMessage(settings.sms_number, "%s(d): %s" % (message.sender, message.text), '07624801423')
         else:
-          sms.sendMessage(settings.sms_number, "%s: %s" % (message.sender, message.text))
+          sms.sendMessage(settings.sms_number, "%s: %s" % (message.sender, message.text), '07624801423')
     except Exception, inst:
       print inst
     f = open(sys.argv[1], 'w')
