@@ -1,6 +1,7 @@
 import urllib2
 from xml.dom import minidom
 from datetime import datetime
+from time import strptime
 
 def textContent(node):
   str = ''
@@ -22,7 +23,7 @@ class Message:
         elif node.tagName == 'text':
           self.text = textContent(node)
         elif node.tagName == 'created_at':
-          self.date = datetime.strptime(textContent(node), '%a %b %d %H:%M:%S +0000 %Y')
+          self.date = datetime(*(strptime(textContent(node), '%a %b %d %H:%M:%S +0000 %Y')[0:6]))
         elif node.tagName == 'in_reply_to_screen_name':
           if textContent(node) == twitter.username:
             self.type = 'reply'
