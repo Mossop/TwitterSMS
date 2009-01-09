@@ -2,6 +2,7 @@ import sys, pickle
 from clicksms import ClickSMS
 from twitter import Twitter
 from optparse import OptionParser
+from urllib2 import HTTPError
 
 class Settings:
   twitter_username = None
@@ -99,6 +100,9 @@ def getUpdates(skip, args):
         else:
           sms.sendMessage(settings.sms_number, "%s: %s" % (message.sender, message.text),
                           '07624801423')
+  except HTTPError, error:
+    if error.code < 500 or error.code >= 600:
+      print error
   except Exception, inst:
     print inst
   f = open(options.state, 'w')
