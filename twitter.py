@@ -54,6 +54,7 @@ class Twitter:
     return (self.username, self.password)
 
   def GetTimeline(self, lastID = None):
+    newID = lastID
     messages = []
     url = 'http://twitter.com/statuses/friends_timeline.xml'
     if lastID is not None:
@@ -62,13 +63,16 @@ class Twitter:
     for node in dom.documentElement.childNodes:
       if node.nodeType == node.ELEMENT_NODE and node.tagName == 'status':
         message = Message(self, node)
-        if message.id > lastID:
-          lastID = message.id
+        if message.id <= lastID:
+          continue
+        if message.id > newID:
+          newID = message.id
         if message.sender != self.username:
           messages += [message]
-    return (messages, lastID)
+    return (messages, newID)
 
   def GetDirectMessages(self, lastID = None):
+    newID = lastID
     messages = []
     url = 'http://twitter.com/direct_messages.xml'
     if lastID is not None:
@@ -77,12 +81,15 @@ class Twitter:
     for node in dom.documentElement.childNodes:
       if node.nodeType == node.ELEMENT_NODE and node.tagName == 'direct_message':
         message = Message(self, node)
-        if message.id > lastID:
-          lastID = message.id
+        if message.id <= lastID:
+          continue
+        if message.id > newID:
+          newID = message.id
         messages += [message]
-    return (messages, lastID)
+    return (messages, newID)
 
   def GetReplies(self, lastID = None):
+    newID = lastID
     messages = []
     url = 'http://twitter.com/statuses/replies.xml'
     if lastID is not None:
@@ -91,8 +98,10 @@ class Twitter:
     for node in dom.documentElement.childNodes:
       if node.nodeType == node.ELEMENT_NODE and node.tagName == 'status':
         message = Message(self, node)
-        if message.id > lastID:
-          lastID = message.id
+        if message.id <= lastID:
+          continue
+        if message.id > newID:
+          newID = message.id
         if message.sender != self.username:
           messages += [message]
-    return (messages, lastID)
+    return (messages, newID)
