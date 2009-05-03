@@ -19,7 +19,7 @@ class Message:
     for node in element.childNodes:
       if node.nodeType == node.ELEMENT_NODE:
         if node.tagName == 'id':
-          self.id = textContent(node)
+          self.id = long(textContent(node))
         elif node.tagName == 'text':
           self.text = textContent(node)
         elif node.tagName == 'created_at':
@@ -58,7 +58,7 @@ class Twitter:
     messages = []
     url = 'http://twitter.com/statuses/friends_timeline.xml'
     if lastID is not None:
-      url += '?since_id=' + lastID
+      url += '?since_id=' + str(lastID)
     dom = self._getStream(url)
     for node in dom.documentElement.childNodes:
       if node.nodeType == node.ELEMENT_NODE and node.tagName == 'status':
@@ -76,7 +76,7 @@ class Twitter:
     messages = []
     url = 'http://twitter.com/direct_messages.xml'
     if lastID is not None:
-      url += '?since_id=' + lastID
+      url += '?since_id=' + str(lastID)
     dom = self._getStream(url)
     for node in dom.documentElement.childNodes:
       if node.nodeType == node.ELEMENT_NODE and node.tagName == 'direct_message':
@@ -93,7 +93,7 @@ class Twitter:
     messages = []
     url = 'http://twitter.com/statuses/replies.xml'
     if lastID is not None:
-      url += '?since_id=' + lastID
+      url += '?since_id=' + str(lastID)
     dom = self._getStream(url)
     for node in dom.documentElement.childNodes:
       if node.nodeType == node.ELEMENT_NODE and node.tagName == 'status':
